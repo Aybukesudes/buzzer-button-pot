@@ -1,0 +1,41 @@
+const int buzzer = 8; 
+const int button = 7;  
+const int potPin = A0;
+bool isPlaying = false; 
+
+void setup() {
+  pinMode(buzzer, OUTPUT);
+  pinMode(button, INPUT);
+  Serial.begin(9600);
+  Serial.println("Setup completed");
+}
+
+void loop() {
+  if (digitalRead(button) == LOW) {  
+    delay(50); 
+    if (digitalRead(button) == LOW) {
+      isPlaying = !isPlaying;
+      Serial.print("Button pressed, isPlaying: ");
+      Serial.println(isPlaying);
+      while (digitalRead(button) == LOW);
+    }
+  }
+
+  if (isPlaying) {
+    playMelody();
+  } else {
+    noTone(buzzer);
+  }
+}
+
+void playMelody() {
+  int potValue = analogRead(potPin);
+  int frequency = map(potValue, 0, 1023, 200, 2000); 
+
+  Serial.print("Pot Value: ");
+  Serial.print(potValue);
+  Serial.print(", Frequency: ");
+  Serial.println(frequency);
+
+  tone(buzzer, frequency); 
+  delay(500); 
